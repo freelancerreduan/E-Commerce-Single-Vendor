@@ -11,7 +11,8 @@ class CategoryController extends Controller
 {
     function add_category(){
         $categories = Category::all();
-        return view('backend.category.category', compact('categories'));
+        $trashed_categories = Category::onlyTrashed()->get();
+        return view('backend.category.category', compact('categories','trashed_categories'));
     }
 
     function store_category(Request $request){
@@ -43,15 +44,25 @@ class CategoryController extends Controller
 
     // Delete Category
     function category_delete($id){
-       $category_img = Category::find($id)->category_img;
-       $delete_from = public_path('uploads/category/'.$category_img);
-       unlink($delete_from);
        Category::find($id)->delete();
-
        return back()->with('delete', 'Category Delete Success');
-
     }
 
+    function category_delete_trash($id){
+        $category_img = Category::onlyTrashed()-> find($id)->category_img;
+        $delete_from = public_path('uploads/category/'.$category_img);
+        unlink($delete_from);
+        
+       Category::onlyTrashed()-> find($id)->forceDelete();
+       return back()->with('delete', 'Category Delete Success');
+    }
+
+
+    // Trash Item Category Restore
+    function restore($id){
+        Category::onlyTrashed()->find($id)->restore();
+        return back()->with('success','Category Restore Successfylly');
+    }
 
     // Sub Category
 

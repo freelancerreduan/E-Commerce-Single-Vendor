@@ -9,9 +9,6 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TagController;
 use App\Models\Tag;
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 // Route with Authentications Direct Linik Potections
 Route::middleware(['auth'])->group(function () {
@@ -30,12 +27,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('add/category',[CategoryController::class , 'add_category'])->name('add.category');
     Route::post('store/category',[CategoryController::class , 'store_category'])->name('store.category');
     Route::get('/category/delete/{id}',[ CategoryController::class, 'category_delete'])->name('category.delete');
+    Route::get('/category/soft/delete/{id}',[ CategoryController::class, 'category_soft_delete'])->name('category.soft.delete');
+    Route::get('/restore/{id}',[ CategoryController::class, 'restore'])->name('restore');
 
 
     // Sub Category Added
     Route::get('/add/subcategory', [CategoryController::class, 'sub_category'])->name('sub.category');
     Route::post('/store/subcategory', [CategoryController::class, 'store_subcategory'])->name('store.subcategory');
     Route::get('/subcategory/delete/{id}',[CategoryController::class, 'subcategory_delete'])->name('subcategory.delete');
+
 
 
     // Tag Genarate
@@ -52,6 +52,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/product/update',[ProductController::class, 'product_update'])->name('product.update');
     Route::get('/product/delete/{id}',[ProductController::class, 'product_delete'])->name('product.delete');
     Route::get('/product/inventory/{id}',[ProductController::class, 'product_inventory'])->name('product.inventory');
+    Route::post('/add/inventory/',[ProductController::class, 'add_inventory'])->name('add.inventory');
     Route::get('product/variant',[ProductController::class, 'product_variant'])->name('product.variant');
     
     // Color & Size
@@ -60,11 +61,21 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/add/size',[ProductController::class, 'add_size'])->name('add.size');
     Route::post('/delete/size',[ProductController::class, 'size_delete'])->name('size.delete');
 
+    Route::get('/inventory/delete{id}', [ProductController::class, 'inventory_delete'])->name('inventory.delete');
+
+    // Announsments
+    Route::get('/add/announsment', [ProductController::class, 'add_announsment'])->name('add.announsment');
+    Route::post('/store/announsment' , [ProductController::class , 'store_announsment'])->name('store.announsment');
+
+
+
 });
 
 
+    // Front End Sections ==========================================
+    Route::get('/',[FrontendController::class, 'index'])->name('index');
 
-
+    Route::get('/single/product/{id}' , [FrontendController::class, 'single_product'])->name('single.product');
 
 
 // Route::middleware('auth')->group(function () {

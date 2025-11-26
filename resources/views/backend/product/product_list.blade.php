@@ -24,7 +24,7 @@
                             <tr>
                                 <th> {{ $index+1 }} </th>
                                 <th> {{ Str::limit($product->product_name,40,'....MORE') }}  </th>
-                                <th> &#2547 {{ $product->price }} </th>
+                                <th> &#2547 {{ optional($product->rel_to_inventory->first())->price }} </th>
                                 <th> {{ $product->discount }}% </th>
                                 <th style="width:5%"> 
                                     <img src=" {{ asset('uploads/products/previews') }}/{{ $product->previous }}" alt="" class="w-100">

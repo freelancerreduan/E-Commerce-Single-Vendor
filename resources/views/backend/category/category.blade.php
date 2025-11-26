@@ -5,7 +5,7 @@
         <div class="col-md-8 col-lg-7">
             <div class="card">
                 <div class="card-header">
-                    <h3> Category List - </h3>
+                    <h4 class="text-center"> Category List - </h4>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered">
@@ -29,11 +29,49 @@
                     </table>
                 </div>
             </div>
+            
+            {{-- Category Trash --}}
+            @if ($trashed_categories -> count() > 0 )
+                            <div class="card mt-4 bg-light bg-gradient">
+                <div class="card-header">
+                    <h4 class="text-center text-danger"> Trashed Category List - </h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>SL</th>
+                            <th>Category</th>
+                            <th>Img</th>
+                            <th>Actions</th>
+                        </tr>
+                        @foreach ($trashed_categories as $index => $trashed )       
+                            <tr>
+                                <th> {{ $index+1 }} </th>
+                                <th> {{ $trashed->category_name }} </th>
+                                <th> <img src=" {{ asset('uploads/category') }}/{{ $trashed->category_img }}" alt="" class="w-25"> </th>
+                                <th> 
+                                    <a  href="{{ route('restore', $trashed->id) }}" class="btn btn-success">Restore </a>
+                                    <a  data-link="{{ route('category.soft.delete', $trashed->id) }}" class="btn btn-danger delelete">Delete</a>
+                                </th>
+                            </tr>
+                        @endforeach
+                    </table>
+                </div>
+            </div>
+
+            @else
+                <div class="card mt-4 bg-light bg-gradient">
+                    <div class="card-body text-center">
+                        <h5 class="text-muted">🚫 Trashed data not found</h5>
+                    </div>
+                </div>
+            @endif
+
         </div>
         <div class="col-md-4 col-lg-5">
             <div class="card">
                 <div class="card-header">
-                    <h1 class= "text-center"> Add Category </h1>
+                    <h4 class= "text-center"> Add Category </h4>
                 </div>
                 <div class="card-body">
                   

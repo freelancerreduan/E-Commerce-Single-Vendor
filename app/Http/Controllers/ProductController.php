@@ -8,6 +8,8 @@ use App\Models\subcategory;
 use App\Models\Tag;
 use App\Models\Gallary;
 use App\Models\Product;
+use App\Models\Announsment;
+use App\Models\Inventory;
 use App\Models\Color;
 use App\Models\Size;
 use Carbon\Carbon;
@@ -67,7 +69,6 @@ class ProductController extends Controller
             'product_name' => $request->product_name,
             'slug' => $slug,
             'discount' => $request->discount,
-
             'short_des' => $request->short_des,
             'long_des' => $request->long_des,
             'previous' => $img_name,
@@ -164,14 +165,48 @@ class ProductController extends Controller
 
     // Product Inventory
     function product_inventory($id){
+        $products = Product::find($id);
         $colors = Color::all();
         $sizes = Size::all();
+        $inventories = Inventory::where('product_id', $id)->get();
         return view('backend.product.inventory',[
+            'product' => $products ,
             'colors' => $colors,
             'sizes' => $sizes, 
+            'inventories' => $inventories, 
         ]);
     }
 
+    // Insert Inventory in database Add inventory
+    function add_inventory(Request $request){
+        $products_info = Product::find($request->product_id);
+        $discount = $request->price - ($products_info->discount * $request->price / 100 );
+
+       $request->validate([
+            'color_id' => 'required|integer',
+            'size_id'  => 'required|integer',
+            'price'    => 'required|numeric',
+            'quantity' => 'required|integer',
+        ]);
+
+        Inventory::insert([
+            'product_id' => $products_info->id,
+            'color_id' => $request->color_id,
+            'size_id' => $request->size_id,
+            'price' => $request->price,
+            'discount_price' =>  $discount,
+            'quantity' => $request->quantity,
+        ]);                  
+
+        return back()->with('success','Inventory Added Successfully');
+    }
+
+
+    // inventory Deleted
+    function inventory_delete($id){
+        Inventory::find($id)->delete();
+        return back()->with('success','Deleted Successfully');
+    }
 
     // Product Variant
     function product_variant(Request $request){
@@ -213,6 +248,30 @@ class ProductController extends Controller
     function size_delete($id){
         $size_delete = Size::find($id)->delete();
         return back()->with('success','Size Deleted Successfully');
+    }
+
+
+    // Annousnment
+    function add_announsment(){
+        $announsment = Announsment::first();
+        return view('backend.announcment.announcment', [
+            'announsment' => $announsment,
+        ]);
+    }
+
+    // store announsment
+    function store_announsment(Request $request){
+
+        $request->validate([
+            'announsment' => 'required|string',
+        ]);
+
+        Announsment::first()->update([
+            'announsment' => $request->announsment,
+            'status' => $request->status,
+        ]);
+        
+        return back()->with('success','Announsmetn Updated Successfully');
     }
 
 

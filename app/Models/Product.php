@@ -18,4 +18,20 @@ class Product extends Model
         'previous',
         'updated_at',
     ];
+
+    // rel to category 
+    function rel_to_category(){
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    // inventory 
+    public function rel_to_inventory()
+    {
+        return $this->hasMany(Inventory::class, 'product_id');
+    }
+
+    // product gallary table ralation 
+    function rel_to_gallarey(){
+        return $this->belongsTo(gallary::class, 'product_id');
+    }
 }
